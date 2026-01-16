@@ -126,15 +126,18 @@ fun MetronomeScreen(viewModel: MetronomeViewModel) {
     val isPlaying = viewModel.isPlaying.value
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // Visualizer
+
         Box(
             modifier = Modifier
-                .size(320.dp)
-                .padding(24.dp),
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             PolygonVisualizer(
@@ -154,70 +157,71 @@ fun MetronomeScreen(viewModel: MetronomeViewModel) {
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        // BPM
-        Text(
-            text = "${viewModel.bpm.value}",
-            style = MaterialTheme.typography.displayLarge
-        )
-        Text("BPM", style = MaterialTheme.typography.labelLarge)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Tap Tempo
-        OutlinedButton(
-            onClick = { viewModel.onTap() },
-            modifier = Modifier.height(48.dp),
-            shape = CircleShape
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text("TAP TEMPO")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Slider
-        Slider(
-            modifier = Modifier.padding(horizontal = 32.dp),
-            value = viewModel.bpm.value.toFloat(),
-            onValueChange = { viewModel.onBpmChange(it.toInt()) },
-            valueRange = 40f..220f
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Number of beats per bar
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            FilledTonalIconButton(onClick = { viewModel.onBeatsChange(viewModel.beatsPerBar.value - 1) }) {
-                Icon(Icons.Default.KeyboardArrowLeft, "Méně")
+            // BPM
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "${viewModel.bpm.value}",
+                    style = MaterialTheme.typography.displayLarge
+                )
+                Text("BPM", style = MaterialTheme.typography.labelLarge)
             }
-            Text(
-                text = "${viewModel.beatsPerBar.value}/4",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = 24.dp)
+
+            // Tap Tempo
+            OutlinedButton(
+                onClick = { viewModel.onTap() },
+                modifier = Modifier.height(48.dp),
+                shape = CircleShape
+            ) {
+                Text("TAP TEMPO")
+            }
+
+            // Slider
+            Slider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                value = viewModel.bpm.value.toFloat(),
+                onValueChange = { viewModel.onBpmChange(it.toInt()) },
+                valueRange = 40f..220f
             )
-            FilledTonalIconButton(onClick = { viewModel.onBeatsChange(viewModel.beatsPerBar.value + 1) }) {
-                Icon(Icons.Default.KeyboardArrowRight, "Více")
+
+            // Number of beats control
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                FilledTonalIconButton(onClick = { viewModel.onBeatsChange(viewModel.beatsPerBar.value - 1) }) {
+                    Icon(Icons.Default.KeyboardArrowLeft, "Méně")
+                }
+                Text(
+                    text = "${viewModel.beatsPerBar.value}/4",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                FilledTonalIconButton(onClick = { viewModel.onBeatsChange(viewModel.beatsPerBar.value + 1) }) {
+                    Icon(Icons.Default.KeyboardArrowRight, "Více")
+                }
+            }
+
+            // Play Button
+            Button(
+                onClick = { viewModel.togglePlay() },
+                modifier = Modifier.size(80.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isPlaying) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Icon(
+                    if (isPlaying) Icons.Default.Close else Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // Play button
-        Button(
-            onClick = { viewModel.togglePlay() },
-            modifier = Modifier.size(90.dp),
-            shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isPlaying) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-            )
-        ) {
-            Icon(
-                if (isPlaying) Icons.Default.Close else Icons.Default.PlayArrow,
-                contentDescription = null,
-                modifier = Modifier.size(32.dp)
-            )
-        }
+        //  Bottom Spacer
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
