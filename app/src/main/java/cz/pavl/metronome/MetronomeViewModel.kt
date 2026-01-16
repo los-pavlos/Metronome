@@ -28,7 +28,7 @@ class MetronomeViewModel(
 
     fun toggleDarkMode(enabled: Boolean) {
         isDarkMode.value = enabled
-        // Uložíme do SharedPreferences
+        // save to SharedPreferences
         prefs.edit().putBoolean("dark_mode", enabled).apply()
     }
 
